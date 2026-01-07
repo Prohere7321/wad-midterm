@@ -29,6 +29,68 @@ function ItemManager () {
    * - The id and className attributes below MUST be preserved.
    * - Your CSS MUST use the existing id and className selectors.
    */
+
+  // Additional refs
+  const itemCategory = useRef(null);
+  const itemPrice = useRef(null);
+
+  const getCategoryIcon = (category) => {
+    if (category === "Stationary") return stationaryLogo;
+    if (category === "Kitchenware") return kitchenwareLogo;
+    if (category === "Appliance") return applianceLogo;
+    return null;
+  };
+
+  const handleAddItem = () => {
+    const name = itemName.current.value.trim();
+    const category = itemCategory.current.value;
+    const price = Number(itemPrice.current.value);
+
+    // Validation
+    if (!name) {
+      setErrorMsg("Item name must not be empty");
+      return;
+    }
+
+    if (
+      items.some(
+        (item) => item.name.toLowerCase() === name.toLowerCase()
+      )
+    ) {
+      setErrorMsg("Item must not be duplicated");
+      return;
+    }
+
+    if (!category) {
+      setErrorMsg("Please select a category");
+      return;
+    }
+
+    if (price < 0) {
+      setErrorMsg("Price must not be less than 0");
+      return;
+    }
+
+    const newItem = {
+      id: items.length + 1,
+      name,
+      category,
+      price: price.toFixed(2),
+    };
+
+    setItems([...items, newItem]);
+    setErrorMsg("");
+
+    // Clear inputs
+    itemName.current.value = "";
+    itemCategory.current.value = "";
+    itemPrice.current.value = "";
+  };
+
+  const handleDelete = (id) => {
+    setItems(items.filter((item) => item.id !== id));
+  };
+
   return (
     <>
       <div id="h1">
@@ -46,17 +108,54 @@ function ItemManager () {
             </tr>
           </thead>
           <tbody>
-            {/*
-              * TODO: Your code goes here
-              * !!! IMPORTANT !!!
-              * - All items must be listed here (above the form row).
-              * - Your input form must be implemented as the LAST row in this table.
-              */}
+            {items.map((item) => (
+              <tr key={item.id}>
+                <td>{item.id}</td>
+                <td>{item.name}</td>
+                <td>
+                  <img
+                    src={getCategoryIcon(item.category)}
+                    alt={item.category}
+                  />
+                </td>
+                <td>{item.price}</td>
+                <td>
+                  <img
+                    src={deleteLogo}
+                    alt="delete"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleDelete(item.id)}
+                  />
+                </td>
+              </tr>
+            ))}
+
+            {/* FORM ROW */}
+            <tr>
+              <td></td>
+              <td>
+                <input type="text" ref={itemName} />
+              </td>
+              <td>
+                <select ref={itemCategory}>
+                  <option value="">-- Select --</option>
+                  <option value="Stationary">Stationary</option>
+                  <option value="Kitchenware">Kitchenware</option>
+                  <option value="Appliance">Appliance</option>
+                </select>
+              </td>
+              <td>
+                <input type="number" ref={itemPrice} defaultValue="0" />
+              </td>
+              <td>
+                <button onClick={handleAddItem}>Add Item</button>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
       <div id="error-message">
-         {/* You MUST display the errorMsg state here. */}
+         {errorMsg}
       </div>
     </>
   );
