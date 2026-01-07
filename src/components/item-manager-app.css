@@ -12,10 +12,47 @@
 .item-table th,
 .item-table td {
   border-bottom: 1px solid black;
+  padding: 8px 12px;
+  white-space: nowrap;
 }
 
 /* Header */
 #h1 {
   font-size: 1.25rem;
   font-weight: 600;
+}
+
+#error-message {
+  color: red;
+  margin-top: 8px;
+  font-size: 0.9rem;
+}
+
+#data-area {
+  width: 100%;
+  overflow-x: auto; /* allows horizontal scroll on small screens */
+}
+
+.item-table {
+  width: 100%;
+  table-layout: auto;
+}
+
+.item-table input,
+.item-table select {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.item-table button {
+  background-color: #1976d2; /* blue */
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.item-table button:hover {
+  background-color: #1565c0; /* darker blue on hover */
 }
